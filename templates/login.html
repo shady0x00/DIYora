@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* Reset */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        hr {
+            width: 50%;
+            margin: 10px auto;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .content {
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .content h2 {
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2759ce;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #0015ff;
+            transform: translateY(-3px);
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to DIYora</h1>
+    <hr>
+    <div class="content">
+        <h2>Login as</h2>
+        <div class="button-group">
+            <form method="GET" action="{{ url_for('user_login') }}">
+                <button type="submit" class="btn">Login as User</button>
+            </form>
+            <form method="GET" action="{{ url_for('admin_login') }}">
+                <button type="submit" class="btn">Login as Admin</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Add fade-in effect to the whole page on load
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.style.opacity = 0;
+            document.body.style.transition = "opacity 1s ease-in-out";
+            setTimeout(() => (document.body.style.opacity = 1), 100);
+        });
+
+        // Add click animation to buttons
+        const buttons = document.querySelectorAll(".btn");
+        buttons.forEach((button) => {
+            button.addEventListener("mousedown", () => {
+                button.style.transform = "scale(0.95)";
+            });
+
+            button.addEventListener("mouseup", () => {
+                button.style.transform = "scale(1)";
+            });
+        });
+    </script>
+</body>
+</html>

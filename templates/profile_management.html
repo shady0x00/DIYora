@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management</title>
+    <style>
+        /* Basic Reset */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Flash messages */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Form styling */
+        form .form-group {
+            margin-bottom: 15px;
+        }
+
+        form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        form input,
+        form textarea,
+        form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        form textarea {
+            resize: vertical;
+        }
+
+        /* Button styling */
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Profile Photo Styling */
+        .profile-photo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-photo-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .upload-btn-wrapper {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .upload-btn-wrapper input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-btn-wrapper button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+        }
+
+        /* Profile information */
+        .profile-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 8px;
+        }
+
+        .profile-info p {
+            font-size: 16px;
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .profile-info strong {
+            color: #333;
+        }
+
+        /* Back to dashboard link */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            form button {
+                width: 100%;
+            }
+
+            .profile-info {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Profile Management</h1>
+
+        <!-- Display flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="alert">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Profile form -->
+        <form action="{{ url_for('profile_management') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="{{ user['username'] }}" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio" rows="4">{{ user['bio'] or '' }}</textarea>
+            </div>
+        
+            <!-- Profile Picture Upload -->
+            <div class="profile-photo-container">
+                {% if user['profile_picture'] %}
+                    <img src="{{ user['profile_picture'] }}" alt="Profile Photo">
+                {% else %}
+                    <img src="/static/default-profile.png" alt="Default Profile Photo">
+                {% endif %}
+                <input type="file" name="profile_picture" accept="image/*">
+            </div>
+        
+            <button type="submit">Update Profile</button>
+        </form>
+        <div class="profile-info">
+            <h2>Your Profile</h2>
+            <p><strong>Email:</strong> {{ user['email'] }}</p>
+            <p><strong>Username:</strong> {{ user['username'] }}</p>
+            <p><strong>Bio:</strong> {{ user['bio'] or 'No bio yet.' }}</p>
+        </div>
+
+        <a href="{{ url_for('user_dashboard') }}">Back to Dashboard</a>
+    </div>
+
+    <script>
+        // JavaScript for Previewing Profile Photo
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function() {
+                const previewImage = document.querySelector('.profile-photo-container img');
+                previewImage.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Profile update form validation (optional)
+        document.querySelector('form').addEventListener('submit', function (event) {
+            let username = document.getElementById('username').value.trim();
+            let bio = document.getElementById('bio').value.trim();
+
+            if (!username || !bio) {
+                event.preventDefault();
+                alert("All fields are required.");
+            }
+        });
+    </script>
+</body>
+
+</html>

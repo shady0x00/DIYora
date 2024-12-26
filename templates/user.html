@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DY</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" /> -->
+    <style>
+        /* Basic styles for visuals */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 3em;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        hr {
+            width: 50%;
+            margin: 20px auto;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px -12px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+
+        form .radio-container {
+            display: flex;
+            justify-content: center; /* Centers the radio buttons horizontally */
+            align-items: center; /* Ensures vertical centering */
+            margin-left: 5px;
+        }
+
+        form .radio-container input {
+            margin-right: 10px; /* Add space between the radio buttons */
+            margin-left: 10px; /* Optional: add space before the first radio button */
+        }
+
+        form .radio-container label {
+            margin-right: 118px; /* Optional: space between the radio button and label */
+            font-size: 16px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #2759ce;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        form button:hover {
+            background-color: #0015ff;
+            transform: translateY(-3px);
+        }
+
+        form .button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form .button:hover {
+            background-color: #45a049;
+        }
+
+        .focused {
+            border: 2px solid #4CAF50;
+            box-shadow: 0 0 10px rgba(72, 239, 72, 0.5);
+        }
+
+        .error {
+            border: 2px solid red;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>DIYora</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <hr>
+
+    <div class="content">
+        <form id="registrationForm" method="POST">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+
+            <label for="confirm">Confirm Password</label>
+            <input type="password" id="confirm" name="confirm" placeholder="Confirm Password" required>
+
+            <label for="user_type">Select User Type</label>
+            <div class="radio-container">
+                <input type="radio" name="user_type" value="creator" id="creator" required>
+                <label for="creator">Creator</label>
+
+                <input type="radio" name="user_type" value="client" id="client" required>
+                <label for="client">Client</label>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p>Already have an account?</p>
+        <a href="{{ url_for('login') }}" class="button">Go to Login</a>
+
+        <hr>
+    </div>
+
+    <script>
+        // Add a focus effect to input fields
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.classList.add('focused');
+            });
+            input.addEventListener('blur', () => {
+                input.classList.remove('focused');
+            });
+        });
+
+        // Form validation feedback
+        document.getElementById('registrationForm').addEventListener('submit', (e) => {
+            let isValid = true;
+            const inputs = document.querySelectorAll('#registrationForm input[required]');
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('error');
+                    isValid = false;
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+            if (!isValid) {
+                e.preventDefault(); // Prevent form submission
+                alert('Please fill in all required fields.');
+            }
+        });
+    </script>
+</body>
+</html>

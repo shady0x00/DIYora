@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* General Styles */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container for the profile page */
+        .profile-container {
+            width: 80%;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 90%;
+            overflow-y: auto;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e1e1e1;
+            padding-bottom: 20px;
+        }
+
+        .profile-header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h2 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .profile-info p {
+            font-size: 18px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Stats Block */
+        .profile-stats {
+            display: flex;
+            gap: 50px;
+            margin-top: 15px;
+        }
+
+        .profile-stats div {
+            text-align: center;
+        }
+
+        .profile-stats span {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            display: block;
+        }
+
+        .profile-stats p {
+            font-size: 14px;
+            color: #999;
+        }
+
+        /* Edit and Follow Button */
+        .profile-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .edit-btn, .follow-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .edit-btn {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        .follow-btn {
+            background-color: #009688;
+            color: #fff;
+        }
+
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .follow-btn:hover {
+            background-color: #00796b;
+        }
+
+        /* Post Gallery */
+        .post-gallery {
+            margin-top: 40px;
+        }
+
+        .post-gallery h3 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .post-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .post {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #e1e1e1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .post:hover {
+            transform: scale(1.05);
+        }
+
+        .post img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .profile-stats {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .post-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .post-list {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-container {
+                padding: 15px;
+            }
+
+            .profile-info h2 {
+                font-size: 28px;
+            }
+
+            .profile-info p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <img src="{{ user.profile_picture if user.profile_picture else 'default.jpg' }}" alt="Profile Image"> <!-- Dynamic profile image -->
+            <div class="profile-info">
+                <h2>{{ user.username }}</h2> <!-- Dynamic username -->
+                <p>{{ user.bio }}</p> <!-- Dynamic bio -->
+                <div class="profile-stats">
+                    <div>
+                        <span>{{ followers_count }}</span> <!-- Dynamic followers count -->
+                        <p>Followers</p>
+                    </div>
+                    <div>
+                        <span>{{ posts_count }}</span> <!-- Dynamic posts count -->
+                        <p>Posts</p>
+                    </div>
+                    <div>
+                        <span>{{ following_count }}</span> <!-- Dynamic following count -->
+                        <p>Following</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit and Follow Buttons -->
+        <div class="profile-buttons">
+            <button class="edit-btn" onclick="editProfile()">Edit Profile</button>
+            <button class="follow-btn" onclick="followUser()">Follow</button>
+        </div>
+
+        <!-- Post Gallery -->
+        <div class="post-gallery">
+            <h3>User's Posts</h3>
+            <div class="post-list">
+                {% for post in posts %}
+                    <div class="post" onclick="viewPost('{{ str(post['_id']) }}')">
+                        <img src="{{ post['media_urls'][0] }}" alt="Post Image"> <!-- Dynamic post image -->
+                    </div>
+                {% endfor %}
+            </div>
+            
+            
+        </div>
+    </div>
+
+    <script>
+        // JavaScript functions for profile actions
+        function editProfile() {
+            alert("Edit your profile.");
+            // Add functionality to open the edit profile page or modal
+        }
+
+        function viewPost(postId) {
+            alert(`Viewing post ${postId}`);
+            // Redirect to post details page or display modal with post details
+        }
+
+        function followUser() {
+            const followersCountElement = document.querySelector(".profile-stats span");
+            let followersCount = parseInt(followersCountElement.textContent);
+            followersCountElement.textContent = followersCount + 1;
+            alert("Followed the user!");
+            // Add backend logic to follow the user
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Post</title>
+
+    <style>
+
+        body {
+
+            font-family: 'Arial', sans-serif;
+
+            margin: 20px;
+
+            background-color: #f4f7fc;
+
+            color: #333;
+
+        }
+
+
+
+        h2 {
+
+            margin-bottom: 20px;
+
+            color: #007bff;
+
+        }
+
+
+
+        form {
+
+            background-color: #fff;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        }
+
+
+
+        label {
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+
+            display: block;
+
+        }
+
+
+
+        input[type="text"],
+
+        textarea,
+
+        select,
+
+        input[type="file"] {
+
+            width: 100%;
+
+            padding: 12px;
+
+            margin-bottom: 20px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 5px;
+
+            font-size: 14px;
+
+            background-color: #f9f9f9;
+
+        }
+
+
+
+        textarea {
+
+            min-height: 150px;
+
+        }
+
+
+
+        select {
+
+            padding: 12px;
+
+            background-color: #fff;
+
+        }
+
+
+
+        button {
+
+            background-color: #007bff;
+
+            color: white;
+
+            padding: 12px 24px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+        }
+
+
+
+        button:hover {
+
+            background-color: #0056b3;
+
+        }
+
+
+
+        .media-preview {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+
+        }
+
+
+
+        .media-preview img,
+
+        .media-preview video {
+
+            max-width: 200px;
+
+            max-height: 150px;
+
+            border-radius: 5px;
+
+            transition: transform 0.3s ease;
+
+        }
+
+
+
+        .media-preview img:hover,
+
+        .media-preview video:hover {
+
+            transform: scale(1.05);
+
+        }
+
+
+
+        .remove-media {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 5px;
+
+            font-size: 14px;
+
+            color: #dc3545;
+
+            cursor: pointer;
+
+        }
+
+
+
+        .remove-media:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+
+        .remove-media span {
+
+            font-weight: bold;
+
+        }
+
+
+
+        .remove-media input[type="checkbox"] {
+
+            margin-right: 10px;
+
+        }
+
+
+
+        .form-section {
+
+            margin-bottom: 30px;
+
+        }
+
+
+
+        /* Responsive Design */
+
+        @media (max-width: 768px) {
+
+            form {
+
+                padding: 15px;
+
+            }
+
+
+
+            button {
+
+                width: 100%;
+
+            }
+
+
+
+            .media-preview {
+
+                justify-content: center;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Edit Post</h2>
+
+    <form action="{{ url_for('edit_post', post_id=post._id) }}" method="post" enctype="multipart/form-data">
+
+        <div class="form-section">
+
+            <label for="title">Title:</label>
+
+            <input type="text" name="title" id="title" value="{{ post.title }}" required>
+
+        </div>
+
+
+
+        <div class="form-section">
+
+            <label for="description">Description:</label>
+
+            <textarea name="description" id="description">{{ post.description }}</textarea>
+
+        </div>
+
+
+
+        <div class="form-section">
+
+            <label for="category">Category:</label>
+
+            <select name="category" id="category" required>
+
+                <option value="knitting" {% if post.category == 'knitting' %}selected{% endif %}>Knitting</option>
+
+                <option value="woodworking" {% if post.category == 'woodworking' %}selected{% endif %}>Woodworking</option>
+
+                <option value="jewelry_making" {% if post.category == 'jewelry_making' %}selected{% endif %}>Jewelry Making</option>
+
+            </select>
+
+        </div>
+
+
+
+        <div class="form-section">
+
+            <label for="media_files">Upload New Media (Images/Videos):</label>
+
+            <input type="file" name="media_files" id="media_files" multiple accept="image/*,video/*">
+
+        </div>
+
+
+
+        <div class="form-section">
+
+            <label>Current Media:</label>
+
+            <div class="media-preview">
+
+                {% for media_url in post.media_urls %}
+
+                    <div class="media-item">
+
+                        {% if media_url.split('.')[-1] in ['mp4', 'avi', 'mov', 'mkv'] %}
+
+                            <video controls>
+
+                                <source src="/{{ media_url }}" type="video/{{ media_url.split('.')[-1] }}">
+
+                                Your browser does not support the video tag.
+
+                            </video>
+
+                        {% else %}
+
+                            <img src="/{{ media_url.replace('/static/', 'static/')}}" alt="{{ post.title }}">
+
+                        {% endif %}
+
+                        <div class="remove-media">
+
+                            <input type="checkbox" name="remove_media" value="{{ media_url }}"> 
+
+                            <span>Remove this media</span>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+
+        <button type="submit">Update Post</button>
+
+    </form>
+
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Add interactive media removal functionality
+
+            const removeMediaCheckboxes = document.querySelectorAll('input[name="remove_media"]');
+
+            
+
+            removeMediaCheckboxes.forEach(checkbox => {
+
+                checkbox.addEventListener('change', () => {
+
+                    const mediaUrl = checkbox.value;
+
+                    const mediaContainer = checkbox.closest('.media-item');
+
+
+
+                    if (checkbox.checked) {
+
+                        // Add logic to dynamically mark media for removal
+
+                        mediaContainer.style.opacity = '0.5';
+
+                    } else {
+
+                        // Remove the mark for media removal
+
+                        mediaContainer.style.opacity = '1';
+
+                    }
+
+                });
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>

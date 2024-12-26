@@ -1,0 +1,467 @@
+admin :
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    
+    <!-- CSS Styles -->
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0288d1;
+            padding: 15px 20px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: #01579b;
+        }
+
+        .navbar .dropdown {
+            position: relative;
+        }
+
+        .dropdown-button {
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dropdown-button:hover {
+            background-color: #01579b;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px 15px;
+            color: #0288d1;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+
+        /* Transparent Search Bar Styles */
+        .search-bar {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent background */
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Light border */
+            border-radius: 25px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            padding: 8px 10px;
+            font-size: 16px;
+            width: 324px;
+        }
+
+        .search-bar input::placeholder {
+            color: white;
+        }
+
+        .search-bar button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Page Content Styles */
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        /* Form Container Styles */
+        .form-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #90caf9;
+        }
+
+        .form-container button {
+            padding: 10px 15px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #1565c0;
+        }
+
+        /* Post Container Styles */
+        .posts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+            justify-content: space-between;
+        }
+
+        .post {
+            position: relative;
+            flex: 1 1 calc(33% - 20px);
+            max-width: calc(33% - 20px);
+            box-sizing: border-box;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .post:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .post img,
+        .post video {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .post-info {
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.7); /* Transparent background */
+            color: white;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            opacity: 0; /* Hide text initially */
+            transition: opacity 0.3s ease;
+        }
+
+        .post:hover .post-info {
+            opacity: 1; /* Show text on hover */
+        }
+
+        .post-info h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .post-info p {
+            margin: 0 0 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        /* Customized Buttons Below Post */
+        .post-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            justify-content: center;
+            z-index: 10; /* Ensure buttons are on top */
+        }
+
+        .delete-btn,
+        .edit-btn {
+            padding: 10px 20px;
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #c62828;
+        }
+
+        .edit-btn {
+            background-color: #0288d1;
+        }
+
+        .edit-btn:hover {
+            background-color: #01579b;
+        }
+
+        /* Notification Styles */
+        .notifications-dropdown {
+            position: relative;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .notifications-dropdown:hover {
+            background-color: #01579b;
+        }
+
+        .notification-list {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 300px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notification-list a {
+            display: block;
+            padding: 10px 15px;
+            color: #0288d1;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .notification-list a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #f44336;
+            color: white;
+            border-radius: 50%;
+            padding: 5px 10px;
+            font-size: 14px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">DIYora</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#posts">Posts</a>
+                <a href="/profile_management">Profile</a>
+                <div class="dropdown">
+                    <button class="dropdown-button">&#9776;</button>
+                    <div class="dropdown-content">
+                        <a href="/faq">FAQS</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                </div>
+                <!-- Notification Button -->
+                <div class="notifications-dropdown" onclick="toggleNotifications()">
+                    <img src="modern-alarm-icon.svg" alt="notifications" style="width:24px;height:24px;">
+                    <span class="notification-count">{{ notifications|length }}</span>
+                    <div class="notification-list" id="notification-list">
+                        {% for notification in notifications %}
+                            <a href="#">{{ notification.message }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Form to Upload Post -->
+    <div class="content">
+        <div class="form-container">
+            <h2>Upload New Post</h2>
+            <form action="{{ url_for('admin_dashboard') }}" method="post" enctype="multipart/form-data">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" required>
+
+                <label for="description">Description:</label>
+                <textarea name="description" id="description"></textarea>
+
+                <label for="category">Category:</label>
+                <select name="category" id="category" required>
+                    <option value="">Select a category</option>
+                    <option value="knitting">Knitting</option>
+                    <option value="woodworking">Woodworking</option>
+                    <option value="jewelry_making">Jewelry Making</option>
+                </select>
+
+                <label for="media_files">Upload Media (Images/Videos):</label>
+                <input type="file" name="media_files" id="media_files" multiple required>
+
+                <button type="submit">Upload Post</button>
+            </form>
+        </div>
+
+        <div class="posts">
+            <h2>Your Posts</h2>
+            <div class="post-container">
+                {% for post in posts %}
+                    <div class="post">
+                        <div class="post-info">
+                            <h3>{{ post.title }}</h3>
+                            <p>{{ post.description }}</p>
+                        </div>
+                        {% for media_url in post.media_urls %}
+                            {% if media_url.split('.')[-1] in ['mp4', 'avi', 'mov', 'mkv'] %}
+                                <video controls>
+                                    <source src="/{{ media_url.replace('/static/', 'static/')}}" type="video/{{ media_url.split('.')[-1] }}">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <img src="/{{ media_url.replace('/static/', 'static/') }}" alt="{{ post.title }}"/>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="post-buttons">
+                            <button class="delete-btn" onclick="deletePost('{{ post._id }}')">Delete</button>
+                            <button class="edit-btn" onclick="editPost('{{ post._id }}')">Edit</button>
+                        </div>
+                        
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+        <script>
+
+           // Dropdown for settings
+document.querySelector('.dropdown-button').addEventListener('click', function () {
+    var dropdown = document.querySelector('.dropdown');
+    dropdown.classList.toggle('active');
+});
+
+// Toggle notification dropdown visibility
+function toggleNotifications() {
+    var notificationList = document.getElementById("notification-list");
+    notificationList.style.display = (notificationList.style.display === "block") ? "none" : "block";
+}
+
+// Delete post function (AJAX)
+function deletePost(postId) {
+    if (confirm("Are you sure you want to delete this post?")) {
+        fetch(`/delete_post/${postId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                // Include CSRF token if you're using one
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Post deleted successfully!");
+                location.reload();
+            } else {
+                alert("Failed to delete post.");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the post.');
+        });
+    }
+}
+
+
+// Edit post function (redirect to edit page)
+function editPost(postId) {
+    window.location.href = `/edit_post/${postId}`;
+}
+
+    </script>
+ </body>
+  </html>

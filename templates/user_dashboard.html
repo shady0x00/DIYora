@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    
+    <!-- Styles -->
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0288d1;
+            padding: 15px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: #01579b;
+        }
+
+        .navbar .dropdown {
+            position: relative;
+        }
+
+        .dropdown-button {
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dropdown-button:hover {
+            background-color: #01579b;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px 15px;
+            color: #0288d1;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+
+        /* Transparent Search Bar Styles */
+        .search-bar {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent background */
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Light border */
+            border-radius: 25px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            padding: 8px 10px;
+            font-size: 16px;
+            width: 324px;
+        }
+
+        .search-bar input::placeholder {
+            color: white;
+        }
+
+        .search-bar button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Content Styles */
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .posts {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .posts h2 {
+            font-size: 24px;
+            color: #0288d1;
+            margin-bottom: 20px;
+        }
+
+        .posts ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .post {
+            position: relative;
+            flex: 1 1 calc(30% - 20px);
+            max-width: calc(30% - 20px);
+            box-sizing: border-box;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .post img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .post-info {
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.7); /* Transparent background */
+            color: white;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            opacity: 0; /* Hide text initially */
+            transition: opacity 0.3s ease;
+        }
+
+        .post:hover .post-info {
+            opacity: 1; /* Show text on hover */
+        }
+
+        .post-info h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .post-info p {
+            margin: 0 0 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .like-btn, .comment-btn {
+            padding: 10px 15px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .like-btn:hover {
+            background-color: #43a047;
+        }
+
+        .comment-btn:hover {
+            background-color: #0288d1;
+        }
+
+        .comment-input {
+            width: calc(100% - 120px);
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .post ul {
+            margin: 10px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .post ul li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .post ul li:last-child {
+            border-bottom: none;
+        }
+    </style>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">DIYora</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#posts">Posts</a>
+                <a href="/profile_management">Profile</a>
+                <div class="dropdown">
+                    <button class="dropdown-button">
+                        ☰
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="/faq">FAQS</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <form action="/user_dashboard" method="GET">
+                    <input type="text" name="search_query" placeholder="Search..." value="{{ search_query }}">
+                    <button type="submit">🔍</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="posts">
+            <h2>Explore Posts</h2>
+            <ul>
+                {% for post in posts %}
+                    <li class="post">
+                        <!-- Media Display -->
+                        {% if post.media_urls %}
+                            <img src="/{{ post.media_urls[0].replace('/static/', 'static/') }}" alt="{{ post.title }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No Image Available">
+                        {% endif %}
+
+                        <!-- Post Information -->
+                        <div class="post-info">
+                            <h3>{{ post.title }}</h3>
+                            <p>{{ post.description }}</p>
+                            <button class="like-btn" data-post-id="{{ post._id }}">Like ({{ post.likes_count }})</button>
+                            <div>
+                                <input type="text" class="comment-input" placeholder="Add a comment">
+                                <button class="comment-btn" data-post-id="{{ post._id }}">Comment</button>
+                            </div>
+                            <ul>
+                                {% for comment in post.comments %}
+                                    <li><strong>{{ comment.username }}</strong>: {{ comment.text }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        
+    // Dropdown toggle functionality
+    $(document).on('click', '.dropdown-button', function() {
+        const dropdown = $(this).parent('.dropdown');
+        dropdown.toggleClass('active'); // Toggle the active class
+    });
+
+    // Close dropdown if clicked outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.dropdown').length) {
+            $('.dropdown').removeClass('active');
+        }
+    });
+
+        // Like Button Functionality
+        $(document).on('click', '.like-btn', function() {
+            const postId = $(this).data('post-id');
+            $.post(`/like/${postId}`, function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            });
+        });
+
+        // Comment Button Functionality
+        $(document).on('click', '.comment-btn', function() {
+            const postId = $(this).data('post-id');
+            const commentText = $(this).siblings('.comment-input').val();
+            if (commentText) {
+                $.ajax({
+                    url: `/comment/${postId}`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ comment: commentText }),
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            } else {
+                alert('Comment cannot be empty.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <style>
+        /* Reset */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        hr {
+            width: 50%;
+            margin: 10px auto;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #2759ce;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        form button:hover {
+            background-color: #0015ff;
+            transform: translateY(-3px);
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .flash-messages li {
+            background-color: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .flash-messages .error {
+            background-color: rgba(255, 0, 0, 0.7);
+        }
+
+        .flash-messages .success {
+            background-color: rgba(0, 255, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Login Page</h1>
+    <hr>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label for="email">Email</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+    
+        <label for="password">Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+    
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        // Add fade-in effect to the whole page on load
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.style.opacity = 0;
+            document.body.style.transition = "opacity 1s ease-in-out";
+            setTimeout(() => (document.body.style.opacity = 1), 100);
+        });
+
+        // Add click animation to buttons
+        const buttons = document.querySelectorAll("form button");
+        buttons.forEach((button) => {
+            button.addEventListener("mousedown", () => {
+                button.style.transform = "scale(0.95)";
+            });
+
+            button.addEventListener("mouseup", () => {
+                button.style.transform = "scale(1)";
+            });
+        });
+    </script>
+</body>
+</html>

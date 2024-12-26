@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - Frequently Asked Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #4e54c8, #8f94fb);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .faq-container, .help-form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 0;
+            font-size: 18px;
+            color: #0288d1;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: #01579b;
+        }
+
+        .faq-question .icon {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .faq-answer.open {
+            max-height: 500px; /* Arbitrary large value for expansion */
+            padding: 10px;
+        }
+
+        .help-form-container {
+            margin-top: 40px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input, textarea, button {
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background-color: #4e54c8;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #8f94fb;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Frequently Asked Questions</h1>
+    <div class="faq-container">
+        <!-- FAQ Item 1 -->
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What is your return policy?</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="faq-answer">
+                <p>Our return policy allows you to return items within 30 days of purchase for a full refund, provided the items are in their original condition.</p>
+            </div>
+        </div>
+        <!-- FAQ Item 2 -->
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How long does shipping take?</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="faq-answer">
+                <p>Shipping typically takes 3-5 business days for domestic orders and 7-14 business days for international orders.</p>
+            </div>
+        </div>
+        <!-- FAQ Item 3 -->
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Do you offer customer support?</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, we offer 24/7 customer support through live chat, email, and phone.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="help-form-container">
+        <h2>Need Further Assistance? Contact Us</h2>
+        <div class="success-message" id="successMessage">
+            Thank you! Your message has been sent successfully.
+        </div>
+        <form id="helpForm" action="/help" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach((question) => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+
+                // Toggle active state
+                question.classList.toggle('active');
+                answer.classList.toggle('open');
+
+                // Collapse other answers
+                document.querySelectorAll('.faq-answer').forEach((otherAnswer) => {
+                    if (otherAnswer !== answer) {
+                        otherAnswer.classList.remove('open');
+                        otherAnswer.previousElementSibling.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Handle form submission
+        const form = document.getElementById('helpForm');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', (event) => {
+            successMessage.style.display = 'block'; // Show success message
+        });
+    </script>
+</body>
+</html>
