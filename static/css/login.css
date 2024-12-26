@@ -1,0 +1,82 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    text-align: center;
+}
+
+/* Header */
+header h1 {
+    font-size: 2.5rem;
+    color: #444;
+    margin: 20px 0;
+}
+
+/* Login Form Section */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.login-form {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.login-form h2 {
+    margin-bottom: 20px;
+    color: #222;
+}
+
+/* Buttons */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.admin-btn {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* Hover Effects */
+.login-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* Add subtle focus styles */
+.login-btn:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 600px) {
+    .login-form {
+        width: 90%;
+    }
+}

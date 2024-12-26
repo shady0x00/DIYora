@@ -1,0 +1,101 @@
+body, h1 {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.background {
+    background-image: url('DO something.jpg');
+    background-size: cover; /* or 'contain' */
+    background-position: center; /* Aligns the image */
+    background-repeat: no-repeat; /* Prevents tiling */
+    height: 200px;
+    width: 300px;
+}
+h1 {
+    text-align: center;
+    color: #333;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 100px; /* Adjust this value to control the distance */
+}
+
+form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form p {
+    margin: 10px 0;
+}
+
+label {
+    font-weight: bold;
+    display: block; /* Display labels as block elements for better formatting */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.radio-container {
+    display: flex;
+    align-items: center;
+}
+
+input[type="radio"] {
+    margin-right: 10px; /* Adjust spacing between buttons */
+}
+
+button[type="submit"] {
+    background-color: #4CAF50; /* Material Design green */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #3e8e41; /* Darker green on hover */
+}
+
+.todo {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo p {
+    margin: 0;
+}
+
+.todo i {
+    color: #888;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        padding: 10px;
+    }
+
+    form, .todo {
+        padding: 15px;
+    }
+}
